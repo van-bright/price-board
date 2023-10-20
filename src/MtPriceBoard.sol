@@ -32,7 +32,7 @@ contract MtPriceBoard {
     *   toPrice: 价格将降至的区间
     *   yOut: 将获得的最大的Y token数量
     */
-    function quoteBuyAmountOrder(uint256 xIn)
+    function quoteSellAmountOrder(uint256 xIn)
         public
         view
         returns(uint256 toPrice, uint256 yOut)
@@ -40,11 +40,18 @@ contract MtPriceBoard {
 
     }
 
-    function quoteRangePrice(uint256 fromPrice, uint256 toPrice) 
+    /*
+    * 查询指定价格区间变动时, 如fromPrice > toPrice, 表示卖出x, 否则表示买入x.
+    * 计算方法(待验证):
+    *   1. 通过价格计算出tick, 从fromTick到toTick, 然后计算出sqrtFromPrice和sqrtToPrice,
+    *   2. 通过positon, 计算出跨tick的liquidity delta.
+    *   3. 通过Math.calcAmount0Delta() 和 Math.calcAmount1Delta() 计算出x, y的改变数量
+    */
+    function quoteRangePrice(uint256 fromPrice, uint256 toPrice)
         public
         view
-        returns(uint256 xIn, uint256 yOut) 
+        returns(uint256 xIn, uint256 yOut)
     {
-        
+
     }
 }
