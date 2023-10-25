@@ -1,12 +1,13 @@
-# Mt Price Board
+# Sample Hardhat Project
 
-## Tasks
+This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
 
-- [x] [uniswap v3数学原理](https://atiselsts.github.io/pdfs/uniswap-v3-liquidity-math.pdf)
-- [x] [uniswap book v3](https://uniswapv3book.com/)
-- [x] solidity数学库prb-math, abdk-libraries-solidity
-- [x] 单池限价询盘, 单池限量询盘
-- [] 跨池限价询盘, 跨池限量询盘
-- [] 手续费和滑点优化
+Try running some of the following tasks:
 
-## Manual
+```shell
+npx hardhat help
+npx hardhat test
+REPORT_GAS=true npx hardhat test
+npx hardhat node
+npx hardhat run scripts/deploy.ts
+```
