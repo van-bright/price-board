@@ -9,6 +9,7 @@ export function fromReadableAmount(
 }
 
 export function toReadableAmount(rawAmount: number, decimals: number): string {
+  console.log("rawAmount: " + rawAmount + " decimals: " + decimals)
   return ethers
     .formatUnits(rawAmount, decimals)
     .slice(0, READABLE_FORM_LEN)

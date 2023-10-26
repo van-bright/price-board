@@ -6,36 +6,37 @@ import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/I
 import {
   POOL_FACTORY_CONTRACT_ADDRESS,
   QUOTER_CONTRACT_ADDRESS,
+  USDC_TOKEN,
+  WETH_TOKEN,
 } from '../libs/constants'
 import { getProvider } from '../libs/providers'
 import { toReadableAmount, fromReadableAmount } from '../libs/conversion'
+import { Token } from '@uniswap/sdk-core'
 
-export async function quote(inputAmountNum: number): Promise<any> {
+export async function quote(inputAmountNum: number, token0Ob: Token, token1Ob: Token): Promise<any> {
   const quoterContract = new ethers.Contract(
     QUOTER_CONTRACT_ADDRESS,
     Quoter.abi,
     getProvider()
   )
-  const poolConstants = await getPoolConstants()
-  console.log(poolConstants)
-  CurrentConfig.tokens.amountIn = inputAmountNum
+  inputAmountNum = Number(inputAmountNum.toFixed(6))
+  const poolConstants = await getPoolConstants(USDC_TOKEN, WETH_TOKEN)
   const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
-    poolConstants.token0,
-    poolConstants.token1,
+    token0Ob.address,
+    token1Ob.address,
     poolConstants.fee,
     fromReadableAmount(
-      CurrentConfig.tokens.amountIn,
-      CurrentConfig.tokens.in.decimals
+      inputAmountNum,
+      token0Ob.decimals
     ).toString(),
     0
   )
-
   const toReadableNum = toReadableAmount(
     quotedAmountOut,
-    CurrentConfig.tokens.out.decimals
+    token1Ob.decimals
   )
 
-  const amountIn = CurrentConfig.tokens.amountIn
+  const amountIn = inputAmountNum
   const price = amountIn / Number(toReadableNum)
   return {
     amountIn: amountIn,
@@ -44,7 +45,7 @@ export async function quote(inputAmountNum: number): Promise<any> {
   }
 }
 
-async function getPoolConstants(): Promise<{
+async function getPoolConstants(inToken: Token, outToken: Token): Promise<{
   token0: string
   token1: string
   fee: number,
@@ -52,8 +53,8 @@ async function getPoolConstants(): Promise<{
 }> {
   const currentPoolAddress = computePoolAddress({
     factoryAddress: POOL_FACTORY_CONTRACT_ADDRESS,
-    tokenA: CurrentConfig.tokens.in,
-    tokenB: CurrentConfig.tokens.out,
+    tokenA: inToken,
+    tokenB: outToken,
     fee: CurrentConfig.tokens.poolFee,
   })
 
